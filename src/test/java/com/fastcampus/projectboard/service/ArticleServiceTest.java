@@ -162,6 +162,21 @@ class ArticleServiceTest {
         then(articleRepository).should().deleteById(articleId);
     }
 
+    @DisplayName("게시글 수를 조회하면, 게시글 수를 반환한다")
+    @Test
+    public void getArticlesCount() throws Exception {
+        //Given
+        long expected = 0L;
+        given(articleRepository.count()).willReturn(expected);
+
+        //When
+        long actual = articleService.getArticleCount();
+
+        //Then
+        assertThat(actual).isEqualTo(expected);
+        then(articleRepository).should().count();
+    }
+
 
     private UserAccount createUserAccount() {
         return UserAccount.of(
