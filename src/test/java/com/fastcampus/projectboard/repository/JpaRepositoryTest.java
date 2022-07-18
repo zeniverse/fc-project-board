@@ -52,7 +52,7 @@ class JpaRepositoryTest {
     public void insert_test() throws Exception {
         //Given
         long previousCount = articleRepository.count();
-        UserAccount userAccount = userAccountRepository.save(UserAccount.of("zeri", "pw", null, null, null));
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of("NewZeri", "pw", null, null, null));
         Article article = Article.of(userAccount, "new article", "new content", "#spring");
 
         //When
