@@ -15,6 +15,11 @@ public record UserAccountDTO(
         LocalDateTime modifiedAt,
         String modifiedBy
 ) {
+
+    public static UserAccountDTO of(String userId, String userPassword, String email, String nickname, String memo) {
+        return new UserAccountDTO(userId, userPassword, email, nickname, memo, null, null, null, null);
+    }
+
     public static UserAccountDTO of(String userId, String userPassword, String email, String nickname, String memo, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
         return new UserAccountDTO(userId, userPassword, email, nickname, memo, createdAt, createdBy, modifiedAt, modifiedBy);
     }
