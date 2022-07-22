@@ -204,11 +204,12 @@ class ArticleServiceTest {
 
     @DisplayName("게시글의 수정 정보를 입력하면, 게시글을 수정한다.")
     @Test
-    void updateArticle_Test() {
+    void updateArticleTest() {
         // Given
         Article article = createArticle();
         ArticleDTO dto = createArticleDto("새 타이틀", "새 내용", "#springboot");
         given(articleRepository.getReferenceById(dto.id())).willReturn(article);
+        given(userAccountRepository.getReferenceById(dto.userAccountDTO().userId())).willReturn(dto.userAccountDTO().toEntity());
 
         // When
         articleService.updateArticle(dto.id(), dto);
@@ -219,6 +220,7 @@ class ArticleServiceTest {
                 .hasFieldOrPropertyWithValue("content", dto.content())
                 .hasFieldOrPropertyWithValue("hashtag", dto.hashtag());
         then(articleRepository).should().getReferenceById(dto.id());
+        then(userAccountRepository).should().getReferenceById(dto.userAccountDTO().userId());
     }
 
     @DisplayName("없는 게시글의 수정 정보를 입력하면, 경고 로그를 찍고 아무 것도 하지 않는다.")
@@ -240,13 +242,14 @@ class ArticleServiceTest {
     void deleteArticle_Test() {
         // Given
         Long articleId = 1L;
-        willDoNothing().given(articleRepository).deleteById(articleId);
+        String userId = "zeri";
+        willDoNothing().given(articleRepository).deleteByIdAndUserAccount_UserId(articleId, userId);
 
         // When
-        articleService.deleteArticle(1L);
+        articleService.deleteArticle(1L, userId);
 
         // Then
-        then(articleRepository).should().deleteById(articleId);
+        then(articleRepository).should().deleteByIdAndUserAccount_UserId(articleId, userId);
     }
 
     @DisplayName("게시글 수를 조회하면, 게시글 수를 반환한다")
@@ -267,10 +270,10 @@ class ArticleServiceTest {
 
     private UserAccount createUserAccount() {
         return UserAccount.of(
-                "uno",
+                "zeri",
                 "password",
-                "uno@email.com",
-                "Uno",
+                "zeri@email.com",
+                "Zeri",
                 null
         );
     }
@@ -298,9 +301,9 @@ class ArticleServiceTest {
                 content,
                 hashtag,
                 LocalDateTime.now(),
-                "Uno",
+                "Zeri",
                 LocalDateTime.now(),
-                "Uno");
+                "Zeri");
     }
 
     private UserAccountDTO createUserAccountDto() {
